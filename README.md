@@ -1,11 +1,2 @@
-# Quarto
+# TOUR DE FRANCE Manager
 
-Compilation :
-```
-prompt> gcc board.c main.c -o game
-```
-
-Execution :
-```
-./game
-```
