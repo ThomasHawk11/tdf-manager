@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang='fr'>
+  <head>
+    <meta charset='utf-8'>
+    <title>Affichage des coureurs</title>
+    <script>
+	//Mise en place de l'ajaxpour les boutons radios de tri
+	function chargerDonnee(ordre, type) 
+	{
+    	var xhr = new XMLHttpRequest();
+
+    	document.getElementById('resultat').innerHTML = '<span>Chargement...</span>';
+
+		xhr.open('GET', './Traitements/affich_COUR_NAT_traitement.php?ordre='+ ordre +'&type=' + type,true);
+		
+		var Lire = function() 
+		{
+			if (xhr.readyState === 4 && xhr.status === 200) 
+		    { 
+				document.getElementById('resultat').innerHTML = '<span>' + xhr.responseText + '</span>';
+			}
+		}
+		xhr.addEventListener('readystatechange', Lire, false);		
+        xhr.send(null); 
+	}
+	//Mise en place de l'ajax pour le bouton supprimer
+	function fctSuppr(n_coureur){
+		suppr = confirm("Voulez-vous vraiment supprimer ce coureur ?");
+		if(suppr == true){
+			var xhr = new XMLHttpRequest();
+
+			xhr.open('GET', './Traitements/suppression_coureur_traitement.php?n_coureur='+ n_coureur,true);
+			
+			var LireSuppr = function() 
+			{
+				if (xhr.readyState === 4 && xhr.status === 200) 
+			    { 
+					alert(xhr.responseText);
+				}
+			}
+			xhr.addEventListener('readystatechange', LireSuppr, false);		
+	        xhr.send(null);
+	    }
+	    else{
+	    	alert("Annulation de la suppression");
+	    }
+	}
+	</script>
+  </head>
+  <body>
+  	<h2>Affichage des coureurs</h2><br>
+  	<form name="a" action="./MENU.php" method="post">
+         <input type="submit" value="Menu" style="display:inline-block;"> 
+     </form>
+  	<hr>
+	<label for='nom'> Nom : </label><input type='radio' id='nom' name='type' value='NOM' checked>&nbsp;&nbsp;&nbsp;&nbsp;
+	<label for='croissant'> Croissant : </label><input type='radio' id='croissant' name='ordre' value='ASC' checked><br />
+	<label for='pays'> Nationalité : </label><input type='radio' id='pays' name='type' value='PAYS'>&nbsp;&nbsp;&nbsp;&nbsp;
+	<label for='decroissant'> Décroissant : </label><input type='radio' id='decroissant' name='ordre' value='DESC'><br />
+	<button id='afficher' name='afficher'>Afficher</button>
+
+	<div id='resultat'>
+    Clique sur le bouton Afficher !
+  	</div>
+
+  	<script>
+		// Mise en place des écouteurs sur les boutons radios
+		function Listen(){
+			if(document.getElementById('nom').checked == true){
+				elt1 = document.getElementById('nom');
+			}
+			else{
+				elt1 = document.getElementById('pays');
+			}
+			if(document.getElementById('croissant').checked == true){
+				elt2 = document.getElementById('croissant');
+			}
+			else{
+				elt2 = document.getElementById('decroissant');
+			}
+			chargerDonnee(elt2.value, elt1.value);
+		}
+		document.getElementById('nom').addEventListener('click', Listen, false);
+		document.getElementById('pays').addEventListener('click', Listen, false);
+		document.getElementById('decroissant').addEventListener('click', Listen, false);
+		document.getElementById('croissant').addEventListener('click', Listen, false);
+		document.getElementById('afficher').addEventListener('click', Listen, false);
+	</script>
+	</body>
+</html>
